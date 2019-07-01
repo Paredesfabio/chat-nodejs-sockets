@@ -9,6 +9,7 @@ io.on('connection', (client) => {
 
     client.on('entrarChat', (data, callback) => {
 
+
         if( !data.usuario.nombre || !data.usuario.sala ){
             let err = {
                 error: true,
@@ -24,15 +25,17 @@ io.on('connection', (client) => {
 
         // listar las personas de esa sala de chat
         client.broadcast.to(data.usuario.sala).emit('listaPersonas', usuarios.getPersonasPorSala(data.usuario.sala));
+        client.broadcast.to(data.usuario.sala).emit('crearMensaje', crearMensaje('Administrador', `${data.usuario.nombre} se unio al chat`));
 
         callback( usuarios.getPersonasPorSala(data.usuario.sala) );
 
     });
  
-    client.on('crearMensaje', (data) => {
+    client.on('crearMensaje', (data, callback) => {
         let persona = usuarios.getPersona( client.id );
         let mensaje = crearMensaje( persona.nombre, data.mensaje );
         client.broadcast.to(persona.sala).emit('crearMensaje', mensaje);
+        callback(mensaje);
     });
 
     client.on('disconnect', () => {

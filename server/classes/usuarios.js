@@ -29,10 +29,8 @@ class Usuarios {
     borrarPersona(id){
 
         let personaBorrada = this.getPersona(id);
-
         // creo un nuevo arreglo y excluyo la persona con el id enviado
         this.personas = this.personas.filter(persona => persona.id != id);
-
         return personaBorrada;
 
     }
